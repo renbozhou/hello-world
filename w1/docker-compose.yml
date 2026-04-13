@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres
+    container_name: project-alpha-db
+    environment:
+      POSTGRES_DB: project_alpha
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres1234!Q
+    ports:
+      - "5432:5432"
+    # PostgreSQL 18+：必须挂载父目录 /var/lib/postgresql（镜像会在其下创建版本子目录），
+    # 勿再挂载到 /var/lib/postgresql/data，否则会触发 entrypoint 报错。
+    # 若该目录里仍是 16 及以前「直接当 PGDATA」的旧数据，需 pg_dump 备份后清空目录再启动，或改用 postgres:16。
+    volumes:
+      - D:/docker/postgresdata:/var/lib/postgresql

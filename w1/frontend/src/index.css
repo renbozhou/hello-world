@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-slate-100 text-slate-900 antialiased;
+}
+
+#root {
+  min-height: 100vh;
+  background:
+    radial-gradient(1200px 400px at 10% -10%, rgba(191, 219, 254, 0.35), transparent 60%),
+    radial-gradient(900px 300px at 90% 0%, rgba(196, 181, 253, 0.2), transparent 60%);
+}

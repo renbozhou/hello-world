@@ -1,0 +1,16 @@
+[project]
+name = "project-alpha-backend"
+version = "0.1.0"
+description = "Project Alpha backend service"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi==0.115.12",
+    "uvicorn[standard]==0.34.1",
+    "sqlalchemy==2.0.40",
+    "psycopg[binary]==3.2.6",
+    "pydantic==2.11.3",
+    "pydantic-settings==2.8.1",
+]
+
+[tool.uv]
+package = false

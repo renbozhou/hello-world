@@ -1,0 +1,133 @@
+### Project Alpha API Test Collection (VS Code REST Client)
+### 使用方式：
+### 1) 先启动后端：uv run uvicorn app.main:app --reload
+### 2) 在 REST Client 中从上到下执行
+### 3) 关键请求会把响应 id 保存到变量，供后续请求复用
+
+@baseUrl = http://localhost:8000/api
+@json = application/json
+
+### 健康检查
+GET {{baseUrl}}/health
+
+### 获取标签列表（初始）
+GET {{baseUrl}}/tags
+
+### 创建标签（tag1）
+# @name createTag1
+POST {{baseUrl}}/tags
+Content-Type: {{json}}
+
+{
+  "name": "bug",
+  "color": "#ef4444"
+}
+
+### 创建标签（tag2）
+# @name createTag2
+POST {{baseUrl}}/tags
+Content-Type: {{json}}
+
+{
+  "name": "feature",
+  "color": "#3b82f6"
+}
+
+### 再次获取标签列表
+GET {{baseUrl}}/tags
+
+### 创建 Ticket（ticket1）
+# @name createTicket1
+POST {{baseUrl}}/tickets
+Content-Type: {{json}}
+
+{
+  "title": "修复登录按钮样式",
+  "description": "按钮在暗色主题下可读性偏低"
+}
+
+### 创建 Ticket（ticket2）
+# @name createTicket2
+POST {{baseUrl}}/tickets
+Content-Type: {{json}}
+
+{
+  "title": "新增筛选面板",
+  "description": "增加按状态和标签筛选"
+}
+
+### 查询全部 Ticket
+GET {{baseUrl}}/tickets
+
+### 按标题搜索 Ticket
+GET {{baseUrl}}/tickets?q=筛选
+
+### 按完成状态查询（未完成）
+GET {{baseUrl}}/tickets?completed=false
+
+### 获取单个 Ticket 详情
+GET {{baseUrl}}/tickets/{{createTicket1.response.body.id}}
+
+### 更新 Ticket（title + description）
+PATCH {{baseUrl}}/tickets/{{createTicket1.response.body.id}}
+Content-Type: {{json}}
+
+{
+  "title": "修复登录按钮对比度",
+  "description": "暗色主题按钮文本提高到 AA 对比度"
+}
+
+### 完成 Ticket
+POST {{baseUrl}}/tickets/{{createTicket1.response.body.id}}/complete
+
+### 查询已完成 Ticket
+GET {{baseUrl}}/tickets?completed=true
+
+### 取消完成 Ticket
+POST {{baseUrl}}/tickets/{{createTicket1.response.body.id}}/uncomplete
+
+### 通过 tag_id 绑定标签到 ticket1
+POST {{baseUrl}}/tickets/{{createTicket1.response.body.id}}/tags
+Content-Type: {{json}}
+
+{
+  "tag_id": "{{createTag1.response.body.id}}"
+}
+
+### 通过 tag_name 绑定标签到 ticket1（不存在则创建）
+# @name bindTagByName
+POST {{baseUrl}}/tickets/{{createTicket1.response.body.id}}/tags
+Content-Type: {{json}}
+
+{
+  "tag_name": "ui"
+}
+
+### 重复绑定同一标签（幂等验证）
+POST {{baseUrl}}/tickets/{{createTicket1.response.body.id}}/tags
+Content-Type: {{json}}
+
+{
+  "tag_id": "{{createTag1.response.body.id}}"
+}
+
+### 按 tag_id 过滤 Ticket
+GET {{baseUrl}}/tickets?tag_id={{createTag1.response.body.id}}
+
+### 查询未打标签 Ticket
+GET {{baseUrl}}/tickets?untagged=true
+
+### 移除标签绑定（ticket1 - bug）
+DELETE {{baseUrl}}/tickets/{{createTicket1.response.body.id}}/tags/{{createTag1.response.body.id}}
+
+### 再次移除同一绑定（幂等验证，应返回 204）
+DELETE {{baseUrl}}/tickets/{{createTicket1.response.body.id}}/tags/{{createTag1.response.body.id}}
+
+### 校验 ticket1 当前详情（含 tags）
+GET {{baseUrl}}/tickets/{{createTicket1.response.body.id}}
+
+### 删除 ticket2
+DELETE {{baseUrl}}/tickets/{{createTicket2.response.body.id}}
+
+### 最终查询 Ticket 列表
+GET {{baseUrl}}/tickets

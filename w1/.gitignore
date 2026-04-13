@@ -1,0 +1,2 @@
+# Postgres 数据目录（docker-compose 绑定挂载）
+postgres-data/
