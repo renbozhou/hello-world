@@ -19,6 +19,10 @@
 按照 ./w1/0001-implementation-plan.md 完整实现这个项目的 phase 1 代码 , 代码生成到 ./w1/ 文件夹下面。
 
 ## 完成项目UI 优化 
-c
+按照 apple websit 的设计风格，think ultra hard, 优化UI UX 。
+
 ## precommit 
 use pre-commit to init the config and setup precommit for python and type script for this project ,also setup github action , precommit should be under root diretor.
+
+## 完成构建项目部署
+完成项目的部署,项目如何部署到  docker 中，给出详细的部署方案，输出到 .w1/0003-deployment.md 文档中

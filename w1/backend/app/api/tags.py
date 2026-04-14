@@ -10,7 +10,7 @@ router = APIRouter(prefix="/tags", tags=["tags"])
 
 
 @router.get("", response_model=list[TagOut])
-def list_tags(db: Session = Depends(get_db)) -> list[Tag]:
+def list_tags(db: Session = Depends(get_db)) -> list[TagOut]:
     stmt = select(Tag).order_by(Tag.name.asc())
     return list(db.scalars(stmt).all())
 
